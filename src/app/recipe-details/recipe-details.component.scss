@@ -1,0 +1,29 @@
+.head{
+    margin-bottom: 2.5rem;
+}
+
+.card{
+    border-radius: 20px;
+    margin-bottom: 30px;
+    padding: 20px;
+}
+
+.recipeImage{
+    min-height:200px;
+}
+
+.gold{
+    color:#e6c40d;;
+}
+
+.red{
+    color:red;
+}
+h5 {
+    display: inline-block;
+    padding-top: 18px;
+    padding-right: 73px;
+}
+.recipeEditColumns {
+    flex-direction: row-reverse;
+}

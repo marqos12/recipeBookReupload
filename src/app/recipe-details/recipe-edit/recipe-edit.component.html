@@ -1,0 +1,146 @@
+<section class="section  has-text-centered" *ngIf="initialized">
+  <div class="section-heading head">
+    <h3 class="title is-2">{{editing?recipe.name:'Nowy przepis'}}</h3>
+  </div>
+
+  <form [formGroup]="recipeForm">
+    <div class="columns box is-desktop">
+      <div class="column is-1 "></div>
+      <div class="column has-text-centered">
+        <div class="field has-text-left">
+          <label class="label">Nazwa</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Podaj nazwę" formControlName="name"
+              [ngClass]="(recipeForm.controls.name.valid || !recipeForm.controls.name.touched)?'':'invalid'">
+          </div>
+        </div>
+        <div class="field has-text-left">
+          <label class="label">Krótki opis</label>
+          <div class="control">
+            <input class="input" type="text" placeholder="Podaj krótki opis" formControlName="shortdesc"
+              [ngClass]="(recipeForm.controls.shortdesc.valid || !recipeForm.controls.shortdesc.touched)?'':'invalid'">
+          </div>
+        </div>
+        <div class="field has-text-left">
+          <label class="label">Opis</label>
+          <div class="control">
+            <textarea class="textarea" placeholder="Podaj pełny opis" rows="3" formControlName="longdesc"
+              [ngClass]="(recipeForm.controls.longdesc.valid || !recipeForm.controls.longdesc.touched)?'':'invalid'"></textarea>
+          </div>
+        </div>
+      </div>
+      <div class="column has-text-centered">
+
+        <div class="field ">
+          <div class="recipeNoImage" *ngIf="!image && !recipeForm.controls.image.value">
+            <h1 class="subtitle is-1">Podgląd zdjcia</h1>
+            <span class="error">{{error}}</span>
+          </div>
+          <div *ngIf="image" class="recipeImage">
+          
+            <img [src]="domSanitizer.bypassSecurityTrustUrl(image)" />
+          </div>
+          <div *ngIf="recipeForm.controls.image.value && !image" class="recipeImage">
+            <img [src]="recipeForm.controls.image.value" alt="Błędy adres obrazka"/>
+          </div>
+
+        </div>
+        <div class="field has-text-left">
+          <label class="label">Zdjęcie</label>
+          <div class="columns">
+            <div class="file column is-3 has-text-centered">
+              <label class="file-label">
+                <input class="file-input" type="file" accept="image/*" (change)="changeListener($event)" name="resume">
+                <span class="file-cta">
+                  <span class="file-icon">
+                    <i class="fas fa-upload"></i>
+                  </span>
+                  <span class="file-label">
+                    Wybierz plik…
+                  </span>
+                </span>
+              </label>
+              lub
+              <input class="input" type="text" placeholder="Podaj URL zdjęcia" (change)="image=''" formControlName="image">
+            </div>
+            <div class="column is-9">
+              <file-drop headertext="Upuść plik tutaj" (onFileDrop)="dropped($event)" (onFileOver)="fileOver($event)"
+                (onFileLeave)="fileLeave($event)"> </file-drop>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="column is-1"></div>
+
+    </div>
+  </form>
+
+  <div class="columns box">
+    <div class="column is-1"></div>
+    <div class="column has-text-centered">
+      <h1 class="subtitle is-2">Składniki</h1>
+      <div class="content is-large has-text-left" (keydown.enter)="addIngredient()" (keydown.lalt)="newIngredient()">
+        <ul>
+          <li *ngFor="let ingredient of ingredientList">{{ingredient.amount}} ({{ingredient.unit}}) {{ingredient.name}}
+            &nbsp;&nbsp;<i class="far fa-times-circle" (click)="removeIngredient(ingredient)"></i></li>
+          <li *ngIf="creatingIngredient" [formGroup]="ingredientForm">
+            <div class="field">
+              <input class="input newIngredient" type="number" placeholder="ilość" formControlName="amount">
+              <input class="input newIngredient" type="text" placeholder="jedn" formControlName="unit">
+              <input class="input newIngredientName " type="text" placeholder="nazwa" formControlName="name">
+              <i class="fas fa-plus-circle" (click)="addIngredient()"></i>
+            </div>
+          </li>
+          <li (click)="newIngredient()"><i class="fas fa-plus-circle"></i> Nowy składnik</li>
+
+        </ul>
+      </div>
+
+    </div>
+    <div class="column has-text-centered">
+      <h1 class="subtitle is-2">Czynności</h1>
+      <div class="content is-large has-text-left" (keydown.enter)="addStep()">
+        <ol>
+          <li *ngFor="let step of stepList">{{step.description}} &nbsp;&nbsp;<i class="far fa-times-circle"
+              (click)="removeStep(step)"></i></li>
+          <li *ngIf="createStep" [formGroup]="stepForm">
+            <div class="field">
+              <textarea class="textarea stepInput" placeholder="Czynność" rows="3"
+                formControlName="description"></textarea>
+              <i class="fas fa-plus-circle" (click)="addStep()"></i>
+            </div>
+          </li>
+          <li (click)="newStep()"><i class="fas fa-plus-circle"></i> Nowy składnik</li>
+
+        </ol>
+      </div>
+
+
+    </div>
+    <div class="column is-1"></div>
+
+  </div>
+
+  <div class="section-heading createNewRecipeRow">
+
+    <h5 class="subtitle is-3">Ocena:
+      <i class="far fa-star" *ngIf="mark<1" (click)="mark=1"></i>
+      <i class="fas fa-star gold" *ngIf="mark>=1" (click)="mark=1"></i>
+      <i class="far fa-star" *ngIf="mark<2" (click)="mark=2"></i>
+      <i class="fas fa-star gold" *ngIf="mark>=2" (click)="mark=2"></i>
+      <i class="far fa-star" *ngIf="mark<3" (click)="mark=3"></i>
+      <i class="fas fa-star gold" *ngIf="mark>=3" (click)="mark=3"></i>
+      <i class="far fa-star" *ngIf="mark<4" (click)="mark=4"></i>
+      <i class="fas fa-star gold" *ngIf="mark>=4" (click)="mark=4"></i>
+      <i class="far fa-star" *ngIf="mark<5" (click)="mark=5"></i>
+      <i class="fas fa-star gold" *ngIf="mark>=5" (click)="mark=5"></i>
+    </h5>
+
+    <h5 class="subtitle is-3">Ulubione:
+      <i class="far fa-heart" *ngIf="!favourite" (click)="favourite=!favourite"></i>
+      <i class="fas fa-heart red" *ngIf="favourite" (click)="favourite=!favourite"></i>
+    </h5>
+    <a class="button is-success is-rounded is-large"
+      (click)="createRecipe()">{{editing?'Zapisz przepis':'Dodaj przepis'}}&nbsp; <i class="fas fa-plus"></i></a>
+  </div>
+</section>

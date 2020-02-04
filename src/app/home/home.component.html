@@ -1,0 +1,58 @@
+<ngx-spinner
+  bdColor="rgba(51,51,51,0.8)"
+  size="medium"
+  color="#fff"
+  type="ball-grid-pulse">
+ <p style="font-size: 20px; color: white">Ładowanie...</p>
+</ngx-spinner>
+
+<div class="box cta ">
+<div class="columns is-mobile is-centered">
+    <div class="field is-grouped is-grouped-multiline" (click)="toNewRecipe()">
+        <div class="control">
+          <a class="button is-success is-rounded is-large">Dodaj nowy przepis &nbsp; <i class="fas fa-plus"></i></a>
+        </div>
+    </div>
+</div>
+</div>
+ 
+
+<div parallax [config]="{initialValue: 00, ratio: 0.5}" class="paralaxa">
+<section class="container">
+  <div class="columns features " *ngFor="let row of recipeTable">
+    <div class="column is-4" *ngFor="let recipe of row" data-aos="zoom-in"  data-aos-delay="000">
+      <div class="card is-shady recipe" (click)="showRecipeDetails(recipe)">
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img *ngIf="recipe.image" [src]="domSanitizer.bypassSecurityTrustUrl(recipe.image)" class="modal-button" >
+            <img *ngIf="!recipe.image" src="assets/logo.png" alt="Zdjęcie" class="modal-button" >
+          </figure>
+        </div>
+        <div class="card-content">
+          <div class="content has-text-centered recipeDetails">
+            <h4>{{recipe.name}}</h4>
+            <p>{{recipe.shortdesc}}</p>
+            <h5 class="subtitle is-5">Ocena:
+              <i class="far fa-star" *ngIf="recipe.mark<1" ></i>
+              <i class="fas fa-star gold" *ngIf="recipe.mark>=1" ></i>
+              <i class="far fa-star" *ngIf="recipe.mark<2" ></i>
+              <i class="fas fa-star gold" *ngIf="recipe.mark>=2" ></i>
+              <i class="far fa-star" *ngIf="recipe.mark<3"></i>
+              <i class="fas fa-star gold" *ngIf="recipe.mark>=3" ></i>
+              <i class="far fa-star" *ngIf="recipe.mark<4" ></i>
+              <i class="fas fa-star gold" *ngIf="recipe.mark>=4" ></i>
+              <i class="far fa-star" *ngIf="recipe.mark<5" ></i>
+              <i class="fas fa-star gold" *ngIf="recipe.mark>=5" ></i>
+            </h5>
+        
+            <h5 class="subtitle is-5">
+              <i class="fas fa-heart red" *ngIf="recipe.favourite==1" ></i>
+            </h5>
+            <span class="button is-link modal-button detailsButton" (click)="showRecipeDetails(recipe)">Zobacz szczeguły</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</div>

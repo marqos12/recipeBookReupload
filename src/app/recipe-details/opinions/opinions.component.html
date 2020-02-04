@@ -1,0 +1,80 @@
+<section class="section  has-text-centered">
+  <div class="section-heading head">
+    <h3 class="title is-2">Opinie</h3>
+  </div>
+  <br />
+  <div class="columns">
+    <div class="column is-1"></div>
+    <div class="column has-text-centered ">
+
+      <div class="card" *ngFor="let opinion of opinionList">
+        <div class="columns is-vcentered">
+
+          <div class=" column is-3">
+           <h2>Autor: {{opinion.author}}</h2>
+           <h3 class="">Opinia:
+            <i class="far fa-star" *ngIf="opinion.mark<1"></i>
+            <i class="fas fa-star gold" *ngIf="opinion.mark>=1"></i>
+            <i class="far fa-star" *ngIf="opinion.mark<2" ></i>
+            <i class="fas fa-star gold" *ngIf="opinion.mark>=2" ></i>
+            <i class="far fa-star" *ngIf="opinion.mark<3" ></i>
+            <i class="fas fa-star gold" *ngIf="opinion.mark>=3" ></i>
+            <i class="far fa-star" *ngIf="opinion.mark<4"></i>
+            <i class="fas fa-star gold" *ngIf="opinion.mark>=4"></i>
+            <i class="far fa-star" *ngIf="opinion.mark<5" ></i>
+            <i class="fas fa-star gold" *ngIf="opinion.mark>=5" ></i>
+          </h3>
+        </div>
+          <div class=" column has-text-left">
+            <h5 class="subtitle  is-5 box">{{opinion.text}}</h5>
+          </div>
+        </div>
+      
+      </div>
+
+      <form [formGroup]="opinionForm">
+        <div class="card">
+          <div class="columns is-vcentered">
+            <div class="field has-text-left column is-6">
+              <label class="label">Autor</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Autor" formControlName="author">
+              </div>
+            </div>
+
+            <div class=" column is-6">
+              <h5 class="subtitle is-5 ">Opinia:
+                <i class="far fa-star" *ngIf="mark<1" (click)="mark=1"></i>
+                <i class="fas fa-star gold" *ngIf="mark>=1" (click)="mark=1"></i>
+                <i class="far fa-star" *ngIf="mark<2" (click)="mark=2"></i>
+                <i class="fas fa-star gold" *ngIf="mark>=2" (click)="mark=2"></i>
+                <i class="far fa-star" *ngIf="mark<3" (click)="mark=3"></i>
+                <i class="fas fa-star gold" *ngIf="mark>=3" (click)="mark=3"></i>
+                <i class="far fa-star" *ngIf="mark<4" (click)="mark=4"></i>
+                <i class="fas fa-star gold" *ngIf="mark>=4" (click)="mark=4"></i>
+                <i class="far fa-star" *ngIf="mark<5" (click)="mark=5"></i>
+                <i class="fas fa-star gold" *ngIf="mark>=5" (click)="mark=5"></i>
+              </h5>
+            </div>
+          </div>
+          <div class="field has-text-left">
+            <label class="label">Opis</label>
+            <div class="control">
+              <textarea class="textarea" placeholder="Treść" rows="3" formControlName="text"></textarea>
+            </div>
+          </div>
+          <div class="section-heading createNewRecipeRow">
+
+
+
+
+            <a class="button is-success is-rounded is-large" (click)="createOpinion()">Dodaj komentarz</a>
+          </div>
+        </div>
+      </form>
+
+
+    </div>
+    <div class="column is-1"></div>
+  </div>
+</section>
